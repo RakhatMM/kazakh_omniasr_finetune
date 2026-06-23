@@ -24,6 +24,21 @@ pairs into it. Target format (full details in the README's *Final dataset struct
 - each row = `text` + `audio_bytes` (the audio **compressed** as FLAC, 16 kHz mono, stored as `list<int8>`)
   + `audio_size` (sample count);
 - plus a `language_distribution_0.tsv` (corpus | language | hours).
+
+Directory tree your converter must produce:
+```
+<dataset_root>/version=0/
+├── corpus=ksc2/
+│   ├── split=train/language=kaz_Cyrl/part-0.parquet   (part-1, part-2, … as the data grows)
+│   └── split=dev/language=kaz_Cyrl/part-0.parquet
+└── corpus=fleurs/
+    ├── split=train/language=kaz_Cyrl/part-0.parquet
+    └── split=dev/language=kaz_Cyrl/part-0.parquet
+<dataset_root>/language_distribution_0.tsv
+```
+The `corpus` / `split` / `language` values live in the **folder names** (hive partitioning), not inside
+the files — so each `.parquet` only stores `text`, `audio_bytes`, `audio_size`.
+
 > **Your job:** read KSC2 (`.flac`+`.txt`) and FLEURS, emit this parquet (+ tsv). Audio that's already
 > 16 kHz mono FLAC can be copied byte-for-byte; anything else must be resampled/re-encoded first.
 
