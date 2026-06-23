@@ -1,6 +1,7 @@
 # Reference config from facebookresearch/omnilingual-asr
 # (workflows/recipes/wav2vec2/asr/configs/ctc-finetune.yaml) — continue training from a CTC checkpoint.
-# Copy this, set dataset.name to your card and dataset_summary_path to your tsv, then train.
+# Copy this, set dataset.name to your card, and set beta_corpus/beta_language to null
+# (single language -> no corpus/language weighting, so no dataset_summary_path/tsv needed), then train.
 model:
   name: "omniASR_CTC_300M"
 dataset:

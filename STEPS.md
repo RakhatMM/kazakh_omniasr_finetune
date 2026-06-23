@@ -22,8 +22,7 @@ The trainer reads one **parquet dataset** in a specific shape. Your converter tu
 pairs into it. Target format (full details in the README's *Final dataset structure*):
 - partitioned by `corpus` / `split` / `language`;
 - each row = `text` + `audio_bytes` (the audio **compressed** as FLAC, 16 kHz mono, stored as `list<int8>`)
-  + `audio_size` (sample count);
-- plus a `language_distribution_0.tsv` (corpus | language | hours).
+  + `audio_size` (sample count).
 
 Directory tree your converter must produce:
 ```
@@ -34,12 +33,11 @@ Directory tree your converter must produce:
 └── corpus=fleurs/
     ├── split=train/language=kaz_Cyrl/part-0.parquet
     └── split=dev/language=kaz_Cyrl/part-0.parquet
-<dataset_root>/language_distribution_0.tsv
 ```
 The `corpus` / `split` / `language` values live in the **folder names** (hive partitioning), not inside
 the files — so each `.parquet` only stores `text`, `audio_bytes`, `audio_size`.
 
-> **Your job:** read KSC2 (`.flac`+`.txt`) and FLEURS, emit this parquet (+ tsv). Audio that's already
+> **Your job:** read KSC2 (`.flac`+`.txt`) and FLEURS, emit this parquet. Audio that's already
 > 16 kHz mono FLAC can be copied byte-for-byte; anything else must be resampled/re-encoded first.
 
 ## 3. Register a dataset card
@@ -55,8 +53,9 @@ The config exposes the **dials** you can experiment with:
 - **learning rate** — the step size (too big overshoots / forgets; too small barely moves);
 - **batch size + grad-accumulation** — how noisy vs. smooth each update's gradient is;
 - **steps** — how long you train (too few = under-trained; too many = over-specialized).
-Set `dataset.name` to your card and the `dataset_summary_path` to your tsv. *Choosing good values is part
-of the exercise.*
+Set `dataset.name` to your card, and set `beta_corpus`/`beta_language` to `null` (a single language needs
+no corpus/language weighting — so no `dataset_summary_path`/tsv is required). *Choosing good values for the
+dials is part of the exercise.*
 
 ## 5. Evaluate  *(write an eval script)*
 Measure **WER / CER** (lower = better). Crucially, evaluate on **the target language *and* others**:

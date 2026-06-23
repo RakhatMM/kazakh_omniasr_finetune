@@ -57,11 +57,13 @@ The trainer reads an Apache **Parquet** dataset, **partitioned by `corpus` / `sp
 └── corpus=fleurs/
     ├── split=train/language=kaz_Cyrl/part-0.parquet …
     └── split=dev/  language=kaz_Cyrl/part-0.parquet
-<dataset_root>/language_distribution_0.tsv   # corpus | language | hours (for mixture weighting)
 ```
+*(Optional: a `language_distribution_*.tsv` of `corpus | language | hours` is only needed if you enable
+corpus/language **mixture weighting** via the `beta_*` settings. With a single language, set the betas to
+`null` and skip it — that's what we do.)*
 
 **How many pairs per parquet file?** As many as you like, but keep each file's `audio_bytes` column
 **under ~2 GB** — a `list<int8>` uses 32-bit offsets (max ≈ 2.1 GB total bytes). With FLAC clips of
-tens–hundreds of KB, that's a few thousand utterances per file; `prep_data.py` writes **~4000 rows per
-part file** and uses `row_group_size=100` (for memory-friendly streaming and shuffling). Large datasets
-simply become many `part-*.parquet` files across the partition folders.
+tens–hundreds of KB, that's a few thousand utterances per file — aim for **~4000 rows per part** and
+`row_group_size=100` (for memory-friendly streaming and shuffling). Large datasets simply become many
+`part-*.parquet` files across the partition folders.
