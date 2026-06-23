@@ -1,0 +1,10 @@
+# Reference dataset-card template from facebookresearch/omnilingual-asr
+# (src/omnilingual_asr/cards/datasets/example_dataset.yaml).
+# The training recipe reads the parquet path from a card like this — NOT from the train config.
+# Copy it, give it a UNIQUE name (do not reuse "example_dataset" — it's a built-in), set `data` to
+# your parquet's version=0 dir, and put it in a folder pointed to by FAIRSEQ2_USER_ASSET_DIR.
+name: example_dataset
+dataset_family: mixture_parquet_asr_dataset
+dataset_config:
+  data: /path/to/your/dataset/version=0
+tokenizer_ref: omniASR_tokenizer_v1

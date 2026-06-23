@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+cards/*.yaml
+my-train.yaml
+data/
+*_run/
+/run/
