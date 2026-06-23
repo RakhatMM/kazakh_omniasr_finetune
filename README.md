@@ -4,7 +4,9 @@ Fine-tune Meta's **Omnilingual ASR** CTC model (`omniASR_CTC_300M`) on Kazakh sp
 on FLEURS (Kazakh + other languages) and KSC2. Built around the official
 [facebookresearch/omnilingual-asr](https://github.com/facebookresearch/omnilingual-asr) training recipe.
 
-See **[STEPS.md](STEPS.md)** for the exact commands.
+See **[STEPS.md](STEPS.md)** for the pipeline explained stage by stage. You implement two pieces
+yourself — a **data converter** (produces the parquet described under *Final dataset structure*) and an
+**evaluation script** (WER/CER on FLEURS `kk`/`en`/`ru` + KSC2); STEPS.md is the spec for both.
 
 ## Data
 
@@ -21,14 +23,15 @@ See **[STEPS.md](STEPS.md)** for the exact commands.
 
 ## Repo contents
 ```
-prep_data.py    # convert audio + transcripts into the training parquet
-eval.py         # score a model on FLEURS (kk/en/ru) or KSC2 test (WER/CER)
-configs/        # reference YAMLs copied from the omnilingual-asr repo
+STEPS.md        # the pipeline explained stage by stage (the spec for what you build)
+configs/        # reference YAMLs from the omnilingual-asr repo (not yours to write)
   ctc-finetune.yaml
   ctc-finetune-recommendation.yaml
   example_dataset.yaml      # the dataset-card template
-STEPS.md        # step-by-step commands
 ```
+You write the rest yourself (see STEPS.md): a **data converter** → the parquet in *Final dataset
+structure*, and an **evaluation script** (WER/CER on FLEURS kk/en/ru + KSC2). The training itself uses
+the omnilingual-asr recipe + a config from `configs/`.
 
 ## Final dataset structure
 
